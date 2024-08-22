@@ -1,34 +1,36 @@
-# FactorVAE
-### Adapted by Tom Frew
+# InvariantStock: Learning Invariant Features for Mastering the Shifting Market [paper](https://openreview.net/pdf?id=dtNEvUOZmA)
+Accurately predicting stock returns is crucial for effective portfolio management. However, existing methods often overlook a fundamental issue in the market, namely, distribution shifts, making them less practical for predicting future markets or newly listed stocks. This study introduces a novel approach to address this challenge by focusing on the acquisition of invariant features across various environments, thereby enhancing robustness against distribution shifts. Specifically, we present InvariantStock, a designed learning framework comprising two key modules: an environment-aware prediction module and an environment-agnostic module. Through the designed learning of these two modules, the proposed method can learn invariant features across different environments in a straightforward manner, significantly improving its ability to handle distribution shifts in diverse market settings. Our results demonstrate that the proposed InvariantStock not only delivers robust and accurate predictions but also outperforms existing baseline methods in both prediction tasks and backtesting within the dynamically changing markets of China and the United States.
 
-From the [original repository](https://github.com/x7jeon8gi/FactorVAE):
-> An unofficial PyTorch implementation of FactorVAE, proposed in "FactorVAE: A Probabilistic Dynamic Factor Model Based on Variational Autoencoder for Predicting Cross-Sectional Stock Returns" by Duan et al.(https://ojs.aaai.org/index.php/AAAI/article/view/20369)
-
-This is the version of FactorVAE I have reproduced on my machine. I am still looking to find the researchers' original parameters, but they are currently:
-
-- Number of Stocks: 300 (from the all)
-- Epochs: 50
-- Learning Rate: 0.0005
-- Batch Size: 30
-- Sequence Length: 20
-- Number of Factors: 8
-- Hidden Space Size: 20
-- Seed: 42
-
-## Sample results
-
+## Model Structure
+![Alt Text](pic/inference_model.png)
+## Environment and Dependencies
 ```
-                                                  risk
-excess_return_without_cost mean               0.000641
-                           std                0.016776
-                           annualized_return  0.152517
-                           information_ratio  0.589304
-                           max_drawdown      -0.300378
-excess_return_with_cost    mean              -0.000845
-                           std                0.016765
-                           annualized_return -0.201010
-                           information_ratio -0.777203
-                           max_drawdown      -0.539686
+Python==3.9
+cuda==11.8
+pytorch==2.1.0
+pandas
+numpy
 ```
 
-![Backest executed on my machine](./backtest_plotly/local_backtest.png)
+## DataSet
+### China
+The daily fundamentals and price features on China stock market can be derived from [Tushare](https://github.com/waditu/tushare)
+
+### US
+US data can be derived from yahoo finance using [yfinance](https://github.com/ranaroussi/yfinance)
+
+### Data Samples
+![alt text](pic/image.png)
+
+## Experiment
+### Normalization and data split
+```sh
+python make_dataset.py
+```
+### trainig the model
+```sh
+python main.py 
+```
+## Citation
+
+

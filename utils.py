@@ -1,3 +1,4 @@
+import pandas as pd
 import torch
 import numpy as np
 import random
@@ -62,63 +63,36 @@ def load_model(args):
     alpha_layer = AlphaLayer(args.hidden_size)
     beta_layer = BetaLayer(args.hidden_size, args.num_factor)
     factor_decoder = FactorDecoder(alpha_layer, beta_layer)
-    factor_predictor = FactorPredictor(args.batch_size, args.hidden_size, args.num_factor)
-    factorVAE = FactorVAE(feature_extractor, factor_encoder, factor_decoder, factor_predictor,args)
+    factor_prior_model = FatorPrior(args.batch_size, args.hidden_size, args.num_factor)
+    predictor = Predictor(feature_extractor, factor_encoder, factor_decoder, factor_prior_model,args)
     
-    return factorVAE
+    return predictor
 
-
-def single_pred(model, test_dataloader, test_dataset, args):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-    model.eval()
-
-    for i, (char, _) in (enumerate(test_dataloader)):
-        char = char.to(device)
-        if char.shape[1] != args.seq_length:
-            return
-        
-        predictions = model.prediction(char.float())
-        return predictions
-    
-    return
             
 @torch.no_grad()
-def generate_prediction_scores(masker,model, test_dataloader, test_dataset, args):
+def generate_prediction_scores(masker,model, test_dataloader, args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
     model.to(device)
-    # extractor.to(device)
     masker.to(device)
-    
     model.eval()
-    # extractor.eval()
     masker.eval()
-    test_loss = 0
     ls = []
-    mask_ls = []
     with tqdm(total=len(test_dataloader)) as pbar:
         for i, (char, _) in (enumerate(test_dataloader)):
             char = char.float().to(device)
-            if char.shape[1] != args.seq_length:
+            if char.shape[1] != args.seq_len:
                 continue
+            char = char[...,:args.feat_dim]
             mask = masker(char.float())[...,0]
             feature = mask * char
             predictions = model.prediction(feature)
-            df = pd.DataFrame(predictions.cpu().numpy(), columns=['score'])
-            # mask = pd.DataFrame(mask.squeeze().cpu().numpy())
-            # try:
-            #     index = test_dataset.index[(args.seq_length +i -1) * args.batch_size : (args.seq_length+i) * args.batch_size]
-            #     df.index = index
-            #     df.drop('empty', level='instrument',inplace=True)
-            #     ls.append(df)
-            # except:
-            #     err.append(df)
+            df = pd.DataFrame(predictions.cpu().numpy(), columns=['pred'])
             pbar.update(1)
             ls.append(df)
-            # mask_ls.append(mask)
+
     return pd.concat(ls,ignore_index=True)
-# ,pd.concat(mask_ls,ignore_index=True)
+
 
 @dataclass
 class test_args:

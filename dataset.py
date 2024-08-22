@@ -1,56 +1,21 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import DataLoader, Dataset, TensorDataset
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import os
-import sys
-import time
-import datetime
-import random
-from tqdm.auto import tqdm
-from torch.utils.data import DataLoader, Dataset, BatchSampler, SequentialSampler
+from torch.utils.data import BatchSampler, SequentialSampler
 
 class StockDataset(torch.utils.data.Dataset):
-    def __init__(self, df,index, num_stock, sequence_length):
-        self.data = df[df.columns.drop(["LABEL0"])].astype(float).values
-        self.label = df["LABEL0"].astype(float).values
-        # self.df.set_index(["datetime","instrument"],inplace=True)
-        self.num_stock = num_stock
-        self.sequence_length = sequence_length
-        # self.date = list(self.df.index.get_level_values("datetime").unique())
-        self.index = index.astype(int)
+    def __init__(self, df,index):
+        self.data = df[df.columns.drop(["label"])].values
+        self.label = df["label"].values
+        self.index = index
 
     def __len__(self):
-        return len(self.index)  # subtract 30 to account for accumulation of 30 days of data
+        return len(self.index)  
 
     def __getitem__(self, idx):
 
-        input_data = []
-        label_data = []
-        # while True:
-        #     index = self.index[idx]
-        #     date, stock = self.df.index[index]
-        #     if date>self.date[-self.sequence_length]:
-        #         continue
-        #     date_list = range(self.date.index(date),self.date.index(date)+20)
-        #     idx_list = [(self.date[i],stock) for i in date_list]
-        #     if not all(i in self.df.index for i in idx_list):
-        #         continue
-            # idx_list = [self.num_stock*i + idx for i in range(self.sequence_length) if self.num_stock*i + idx < len(self.df)]
         idx_list = self.index[idx]
-        data = self.data[idx_list] #(seq_len, character)
-        label = self.label[idx_list] #(seq_len, 1)
-        
-        input_data.append(data)
-        input_data = np.concatenate(input_data, axis=0)
-        label_data.append(label)
-        # label 도출 값은 반드시 잘라서 써야함.
-        return (input_data, label)
+        data = self.data[idx_list]
+        label = self.label[idx_list] 
+        return (data, label)
 
 class DynamicBatchSampler(BatchSampler):
     def __init__(self, dataset, batch_sizes):

@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "args": ["--normalize","--save_dir","./best_models/test/"]
+            "args": ["--save_dir","./best_models/test/"]
         }
     ]
 }
