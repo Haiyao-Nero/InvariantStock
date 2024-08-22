@@ -20,8 +20,7 @@ The daily fundamentals and price features on China stock market can be derived f
 US data can be derived from yahoo finance using [yfinance](https://github.com/ranaroussi/yfinance)
 
 ### Data Samples
-![alt text](pic/image.png)
-
+![alt text](pic/samples.png)
 ## Experiment
 ### Normalization and data split
 ```sh
