@@ -123,7 +123,7 @@ def main(args):
     valid_batch_sampler = DynamicBatchSampler(valid_ds,valid_batch_sizes)
     
     test_batch_sizes = pd.DataFrame([ i[0] for i in dataset.index[test_index[:,0]].values]).value_counts(sort=False).values
-    test_batch_sampler = DynamicBatchSampler(valid_ds,valid_batch_sizes)
+    test_batch_sampler = DynamicBatchSampler(test_ds,test_batch_sizes)
 
     train_dataloader = DataLoader(train_ds, batch_sampler=train_batch_sampler, shuffle=False, num_workers=4)
     valid_dataloader = DataLoader(valid_ds, batch_sampler=valid_batch_sampler, shuffle=False, num_workers=4)
@@ -177,6 +177,7 @@ def main(args):
     output = generate_prediction_scores(feature_mask,predictor,test_dataloader,args)
     output.index = dataset.index[test_index[:,-1]]
     output["label"] = dataset.loc[output.index,'label']
+    print("Test Result:")
     rankic(output)
     
     if args.wandb:
