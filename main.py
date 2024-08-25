@@ -172,6 +172,7 @@ def main(args):
             torch.save(predictor.state_dict(), predictor_root)
             torch.save(feature_mask.state_dict(), feat_mask_root)
     
+    #loading the best model for the final test set
     predictor.load_state_dict(torch.load(predictor_root))
     feature_mask.load_state_dict(torch.load(feat_mask_root))
     output = generate_prediction_scores(feature_mask,predictor,test_dataloader,args)

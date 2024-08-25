@@ -36,6 +36,7 @@ if not os.path.exists(args.data_dir):
     os.makedirs(args.data_dir)
 
 dataset = pd.read_pickle(os.path.join(args.data_dir,"usdataset.pkl"))
+dataset.set_index(["datetime","instrument"],inplace=True)
 
 dataset[dataset.columns.drop("label")] = multi_normalize([*dataset[dataset.columns.drop("label")].groupby("datetime")])
 
