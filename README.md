@@ -74,5 +74,15 @@ $TopK$ strategy for portfolio construction, wherein each stock within the portfo
 $TopK$ strategy involves selecting the top 
 $k$ stocks with the highest predicted returns for a long position, while simultaneously shorting the $k$ stocks with the lowest predicted returns. It's important to note that in the China stock market, due to specific policies, only long positions are executed. In China stock market, there are regulatory mechanisms such as 'limit-up' or 'limit-down' rules. When a stock hits its limit-up, it becomes hard for further buying orders to be filled.  similarly, hitting the limit-down prevents selling further orders. Conversely, in the US market, both long and short positions are feasible. Additionally, a commission fee is unilaterally charged at a rate of 0.0015 in both markets.
 ## Citation
-
-
+```
+@article{
+cao2024invariantstock,
+title={InvariantStock: Learning Invariant Features for Mastering the Shifting Market},
+author={Haiyao Cao and Jinan Zou and Yuhang Liu and Zhen Zhang and Ehsan Abbasnejad and Anton van den Hengel and Javen Qinfeng Shi},
+journal={Transactions on Machine Learning Research},
+issn={2835-8856},
+year={2024},
+url={https://openreview.net/forum?id=dtNEvUOZmA},
+note={}
+```
+}
